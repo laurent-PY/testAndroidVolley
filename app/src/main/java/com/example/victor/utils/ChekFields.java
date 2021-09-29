@@ -2,6 +2,7 @@ package com.example.victor.utils;
 
 import com.example.victor.models.Users;
 
+
 public class ChekFields {
 
 
@@ -12,13 +13,9 @@ public class ChekFields {
         String $mail = subs.getMail();
         String $password = subs.getPassword();
 
-        String [] fields = { $nom, $prenom, $mail, $password };
 
-
-        if(fields.equals("")){
-
+        if($nom.equals("") || $prenom.equals("") || $mail.equals("") || $password.equals("")){
             return false;
-
         }else{
             return true;
         }

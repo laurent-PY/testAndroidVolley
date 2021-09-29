@@ -2,29 +2,29 @@ package com.example.victor;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
+//block d'import pour la librairy Volley
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+
+//block d'import pour la class Users et la class CheckFields
 import com.example.victor.models.Users;
 import com.example.victor.utils.ChekFields;
-
+//block d'import pour manipuler et créer le Json
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-
+//ce block d'import me sert à falcifier le certificat SSL
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -43,6 +43,8 @@ public class PostVolley extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_volley);
+        //appel la méthode de falcification de certificat
+
         handleSSLHandshake();
 
         // Bindage des champs dans la vue xml avec les 'EditText' déclarés précedement.
@@ -67,18 +69,16 @@ public class PostVolley extends AppCompatActivity {
                 subs.setPrenom(prenom_volley.getText().toString());
                 subs.setMail(mail_volley.getText().toString());
                 subs.setPassword(password_volley.getText().toString());
-                boolean $test = ChekFields.emptyFields(subs);
-                if($test == true){
+                // Todo terminer le contrôle de champs saisis
+                boolean $testEmpty = ChekFields.emptyFields(subs);
+                System.out.println($testEmpty);
+                if(!$testEmpty){
                     errormsg_volley.setText("Tous les champs doivent être saisis");
-                }else{
                     // j'appel la méthode volley qi se charge de récupéré les données pour envoyer un json au backend
+                }else{
                     volleyPost(subs);
-                    // petit contrôle.
-                    System.out.println("Fin de création de l'objet subs : ****************************" + subs);
+                    errormsg_volley.setText("");
                 }
-
-
-
             }
             // méthode qui se charge de créer la string qui servira à la création du Json à envoyer au serveur backend PHP
             // elle a besoin en parametre d'un objet, l'objet utilisateur(Users).
