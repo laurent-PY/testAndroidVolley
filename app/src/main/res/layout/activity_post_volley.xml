@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="103dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="30dp"
         android:ems="10"
         android:inputType="textPersonName"
         app:layout_constraintStart_toStartOf="parent"
@@ -32,20 +32,18 @@
         android:id="@+id/button_volley"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="164dp"
-        android:layout_marginTop="28dp"
-        android:layout_marginEnd="151dp"
+        android:layout_marginTop="36dp"
         android:text="Valider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password_volley" />
+        app:layout_constraintTop_toBottomOf="@+id/error_password_volley" />
 
     <EditText
         android:id="@+id/mail_volley"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="103dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="30dp"
         android:ems="10"
         android:inputType="textPersonName"
         app:layout_constraintStart_toStartOf="parent"
@@ -56,18 +54,49 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="103dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="30dp"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:inputType="textPassword"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/mail_volley" />
 
     <TextView
-        android:id="@+id/errormsg_volley"
+        android:id="@+id/error_nom_volley"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="59dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="103dp"
+        android:textColor="#FF5722"
+        android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_volley" />
+        app:layout_constraintTop_toBottomOf="@+id/nom_volley" />
+
+    <TextView
+        android:id="@+id/error_prenom_volley"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="103dp"
+        android:textColor="#FF5722"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/prenom_volley" />
+
+    <TextView
+        android:id="@+id/error_mail_volley"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="103dp"
+        android:textColor="#FF5722"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mail_volley" />
+
+    <TextView
+        android:id="@+id/error_password_volley"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="103dp"
+        android:textColor="#FF5722"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/password_volley" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 //block d'import pour la librairy Volley
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -37,7 +38,7 @@ public class PostVolley extends AppCompatActivity {
     //déclaration des 'EditText' qui vont servir de passerelle pour le bindage.
     private EditText nom_volley, prenom_volley, mail_volley, password_volley;
     private Button button_volley;
-    private TextView errormsg_volley;
+    private TextView error_nom_volley, error_prenom_volley, error_mail_volley, error_password_volley;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +53,10 @@ public class PostVolley extends AppCompatActivity {
         prenom_volley = (EditText) findViewById(R.id.prenom_volley);
         mail_volley = (EditText) findViewById(R.id.mail_volley);
         password_volley = (EditText) findViewById(R.id.password_volley);
-        errormsg_volley = (TextView) findViewById(R.id.errormsg_volley);
+        error_nom_volley = (TextView) findViewById(R.id.error_nom_volley);
+        error_prenom_volley = (TextView) findViewById(R.id.error_prenom_volley);
+        error_mail_volley = (TextView) findViewById(R.id.error_mail_volley);
+        error_password_volley = (TextView) findViewById(R.id.error_password_volley);
         button_volley = (Button) findViewById(R.id.button_volley);
 
 
@@ -70,24 +74,38 @@ public class PostVolley extends AppCompatActivity {
                 subs.setMail(mail_volley.getText().toString());
                 subs.setPassword(password_volley.getText().toString());
                 // Todo terminer le contrôle de champs saisis
-                boolean $testEmpty = ChekFields.emptyFields(subs);
-                System.out.println($testEmpty);
-                if(!$testEmpty){
-                    errormsg_volley.setText("Tous les champs doivent être saisis");
-                    // j'appel la méthode volley qi se charge de récupéré les données pour envoyer un json au backend
-                }else{
+                // contrôle de la présence de saisi, et l'ajout de regex qui limite a a-A z-Z et trait d'union '-'
+                String state_nom = ChekFields.nom_volley_check(subs);
+                error_nom_volley.setText(state_nom);
+                // contrôle de la présence de saisi, et l'ajout de regex qui limite a a-A z-Z et trait d'union '-'
+                String state_prenom = ChekFields.prenom_volley_check(subs);
+                error_prenom_volley.setText(state_prenom);
+                // contrôle sur l'adresse, présence de saisi et mail via REGEX EMAIL_ADDRESS de Java
+                String state_mail = ChekFields.mail_volley_check(subs);
+                error_mail_volley.setText(state_mail);
+                // contrôle sur me mdp présence et complexité de 8 caractères 1 lettre et un chiffre
+                String state_password = ChekFields.password_volley_check(subs);
+                error_password_volley.setText(state_password);
+                // Todo terminer le contrôle de champs saisis
+
+                if(state_nom.equals("") && state_prenom.equals("") && state_mail.equals("") && state_password.equals("")){
+                    nom_volley.setText("");
+                    prenom_volley.setText("");
+                    mail_volley.setText("");
+                    password_volley.setText("");
+                    Toast.makeText(PostVolley.this, "Envoi des données OK !", Toast.LENGTH_SHORT).show();
+                    // j'appel la méthode volley qui se charge de récupérer les données pour envoyer un json au backend
                     volleyPost(subs);
-                    errormsg_volley.setText("");
                 }
             }
             // méthode qui se charge de créer la string qui servira à la création du Json à envoyer au serveur backend PHP
-            // elle a besoin en parametre d'un objet, l'objet utilisateur(Users).
+            // elle a besoin en paramètre d'un objet, l'objet utilisateur(Users).
             public void volleyPost(Users subs) {
                 // postUrl qui reçois l'adresse du serveur et le nom du script à appeler.
                 String postUrl = "https://192.168.43.244/testing/write.php";
                 RequestQueue requestQueue = Volley.newRequestQueue(PostVolley.this);
                 // créer les paires clé valeur à stocker dans l'objet json.
-                // attention, j'ai créé une paires "action : "register" qui servira au script PHP pour router la demande, par exemple register->insert,
+                // attention, j'ai créé une paire "action : "register" qui servira au script PHP pour router la demande, par exemple register->insert,
                 // delete->del, maj->update par exemple.
                 JSONObject postData = new JSONObject();
                 try {
@@ -113,7 +131,7 @@ public class PostVolley extends AppCompatActivity {
                     }
                 });
                 requestQueue.add(jsonObjectRequest);
-                System.out.println("ici -------------------->     "+ jsonObjectRequest);
+                // System.out.println("ici -------------------->"+ jsonObjectRequest);
             }
         });
 
