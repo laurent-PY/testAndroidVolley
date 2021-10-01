@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 //block d'import pour la librairy Volley
@@ -25,6 +26,8 @@ import org.json.JSONObject;
 
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
+import java.util.Timer;
+import java.util.TimerTask;
 //ce block d'import me sert à falcifier le certificat SSL
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -36,15 +39,20 @@ import javax.net.ssl.X509TrustManager;
 public class PostVolley extends AppCompatActivity {
 
     //déclaration des 'EditText' qui vont servir de passerelle pour le bindage.
-    private EditText nom_volley, prenom_volley, mail_volley, password_volley;
+    private EditText nom_volley, prenom_volley, mail_volley, password_volley, confirm_volley;
     private Button button_volley;
-    private TextView error_nom_volley, error_prenom_volley, error_mail_volley, error_password_volley;
+    private TextView error_nom_volley, error_prenom_volley, error_mail_volley, error_password_volley, error_confirm_volley;
+
+    // TODO test progres bar
+    ProgressBar pb;
+    int counter = 0;
+    // TODO test progres bar
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_volley);
-        //appel la méthode de falcification de certificat
+        //appelle la méthode de falcification de certificat
 
         handleSSLHandshake();
 
@@ -53,48 +61,65 @@ public class PostVolley extends AppCompatActivity {
         prenom_volley = (EditText) findViewById(R.id.prenom_volley);
         mail_volley = (EditText) findViewById(R.id.mail_volley);
         password_volley = (EditText) findViewById(R.id.password_volley);
+        confirm_volley = (EditText) findViewById(R.id.confirm_volley);
         error_nom_volley = (TextView) findViewById(R.id.error_nom_volley);
         error_prenom_volley = (TextView) findViewById(R.id.error_prenom_volley);
         error_mail_volley = (TextView) findViewById(R.id.error_mail_volley);
         error_password_volley = (TextView) findViewById(R.id.error_password_volley);
+        error_confirm_volley = (TextView) findViewById(R.id.error_confirm_volley);
         button_volley = (Button) findViewById(R.id.button_volley);
 
 
-        // placement d'un éctouteur d'évènement sur le button
+        // placement d'un éctouteur d'événement sur le button
         button_volley.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //lorsque le bouton est cliqué, création d'un objet.
                 Users subs = new Users();
                 // affectation des valeurs aux attributs de l'objet.
-                // l'attribut action est necessaire lors de l'appel dans le backend. Il me permet de faire du routage.
+                // l'attribut action est nécessaire lors de l'appel dans le backend. Il me permet de faire du routage.
                 subs.setAction("register");
                 subs.setNom(nom_volley.getText().toString());
                 subs.setPrenom(prenom_volley.getText().toString());
                 subs.setMail(mail_volley.getText().toString());
                 subs.setPassword(password_volley.getText().toString());
+                subs.setConfirm((confirm_volley).getText().toString());
                 // Todo terminer le contrôle de champs saisis
-                // contrôle de la présence de saisi, et l'ajout de regex qui limite a a-A z-Z et trait d'union '-'
+                // contrôle de la présence de saisi, et l'ajout de regex qui limite à a-A z-Z et trait d'union '-'
                 String state_nom = ChekFields.nom_volley_check(subs);
+                // je set le label text avec le msg de retour de la méthode
                 error_nom_volley.setText(state_nom);
-                // contrôle de la présence de saisi, et l'ajout de regex qui limite a a-A z-Z et trait d'union '-'
+                // contrôle de la présence de saisi, et l'ajout de regex qui limite à a-A z-Z et trait d'union '-'
                 String state_prenom = ChekFields.prenom_volley_check(subs);
+                // je set le label text avec le msg de retour de la méthode
                 error_prenom_volley.setText(state_prenom);
                 // contrôle sur l'adresse, présence de saisi et mail via REGEX EMAIL_ADDRESS de Java
                 String state_mail = ChekFields.mail_volley_check(subs);
+                // je set le label text avec le msg de retour de la méthode
                 error_mail_volley.setText(state_mail);
                 // contrôle sur me mdp présence et complexité de 8 caractères 1 lettre et un chiffre
                 String state_password = ChekFields.password_volley_check(subs);
+                // je set le label text avec le msg de retour de la méthode
                 error_password_volley.setText(state_password);
+                // contrôle de la confirmation du champ confirm
+                String state_confirm = ChekFields.confirm_volley_check(subs);
+                // je set le label text avec le msg de retour de la méthode
+                error_confirm_volley.setText(state_confirm);
+
+
+
+
                 // Todo terminer le contrôle de champs saisis
 
-                if(state_nom.equals("") && state_prenom.equals("") && state_mail.equals("") && state_password.equals("")){
+                if(state_nom.equals("") && state_prenom.equals("") && state_mail.equals("") && state_password.equals("") && state_confirm.equals("")){
                     nom_volley.setText("");
                     prenom_volley.setText("");
                     mail_volley.setText("");
                     password_volley.setText("");
+                    confirm_volley.setText("");
                     Toast.makeText(PostVolley.this, "Envoi des données OK !", Toast.LENGTH_SHORT).show();
-                    // j'appel la méthode volley qui se charge de récupérer les données pour envoyer un json au backend
+                    // j'appelle la méthode volley qui se charge de récupérer les données pour envoyer un json au backend
+                    progressb();
                     volleyPost(subs);
                 }
             }
@@ -102,7 +127,7 @@ public class PostVolley extends AppCompatActivity {
             // elle a besoin en paramètre d'un objet, l'objet utilisateur(Users).
             public void volleyPost(Users subs) {
                 // postUrl qui reçois l'adresse du serveur et le nom du script à appeler.
-                String postUrl = "https://192.168.43.244/testing/write.php";
+                String postUrl = "https://192.168.0.18/testing/write.php";
                 RequestQueue requestQueue = Volley.newRequestQueue(PostVolley.this);
                 // créer les paires clé valeur à stocker dans l'objet json.
                 // attention, j'ai créé une paire "action : "register" qui servira au script PHP pour router la demande, par exemple register->insert,
@@ -133,8 +158,25 @@ public class PostVolley extends AppCompatActivity {
                 requestQueue.add(jsonObjectRequest);
                 // System.out.println("ici -------------------->"+ jsonObjectRequest);
             }
-        });
+            // TODO test progres bar à effacer
+            public void progressb(){
+                pb = (ProgressBar) findViewById(R.id.progressBar_volley);
 
+                final Timer t = new Timer();
+                TimerTask tt = new TimerTask() {
+                    @Override
+                    public void run() {
+                        counter++;
+                        pb.setProgress(counter);
+                        if(counter == 100){
+                            t.cancel();
+                        }
+                    }
+                };
+                t.schedule(tt, 0,5);
+            }
+            // TODO test progres bar à effacer
+        });
 
     }
     //Methode à ne pas utiliser hors dev local "simule la présence d'un certificat de confiance 'cert' SSL"

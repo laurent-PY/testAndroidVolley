@@ -8,6 +8,7 @@ public class Users {
     private String prenom;
     private String mail;
     private String password;
+    private String confirm;
 
     public Users() {
     }
@@ -56,6 +57,10 @@ public class Users {
 
     public void setAction(String action) { this.action = action; }
 
+    public String getConfirm() { return confirm; }
+
+    public void setConfirm(String confirm) { this.confirm = confirm; }
+
     @Override
     public String toString() {
         return "Users{" +
@@ -65,6 +70,7 @@ public class Users {
                 ", prenom='" + prenom + '\'' +
                 ", mail='" + mail + '\'' +
                 ", password='" + password + '\'' +
+                ", confirm='" + confirm + '\'' +
                 '}';
     }
 }
