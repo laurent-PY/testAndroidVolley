@@ -10,10 +10,11 @@
         android:id="@+id/prenom_volley"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="103dp"
         android:layout_marginTop="30dp"
         android:ems="10"
+        android:hint="Prénom"
         android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nom_volley" />
 
@@ -21,10 +22,11 @@
         android:id="@+id/nom_volley"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="103dp"
         android:layout_marginTop="68dp"
         android:ems="10"
+        android:hint="Nom"
         android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -42,10 +44,11 @@
         android:id="@+id/mail_volley"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="103dp"
         android:layout_marginTop="30dp"
         android:ems="10"
+        android:hint="Email"
         android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/prenom_volley" />
 
@@ -53,10 +56,11 @@
         android:id="@+id/password_volley"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="103dp"
         android:layout_marginTop="30dp"
         android:ems="10"
+        android:hint="Mot de passe"
         android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/mail_volley" />
 
@@ -64,7 +68,7 @@
         android:id="@+id/error_nom_volley"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="103dp"
+        android:layout_marginStart="101dp"
         android:textColor="#FF5722"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -74,7 +78,7 @@
         android:id="@+id/error_prenom_volley"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="103dp"
+        android:layout_marginStart="101dp"
         android:textColor="#FF5722"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -84,7 +88,7 @@
         android:id="@+id/error_mail_volley"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="103dp"
+        android:layout_marginStart="101dp"
         android:textColor="#FF5722"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -94,32 +98,21 @@
         android:id="@+id/error_password_volley"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="103dp"
+        android:layout_marginStart="101dp"
         android:textColor="#FF5722"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/password_volley" />
 
-    <ProgressBar
-        android:id="@+id/progressBar_volley"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="410dp"
-        android:layout_height="66dp"
-        android:layout_marginTop="92dp"
-        android:layout_marginEnd="1dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_volley" />
-
     <EditText
         android:id="@+id/confirm_volley"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="103dp"
         android:layout_marginTop="30dp"
         android:ems="10"
+        android:hint="Confirmez"
         android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/password_volley" />
 
@@ -127,7 +120,7 @@
         android:id="@+id/error_confirm_volley"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="103dp"
+        android:layout_marginStart="101dp"
         android:textColor="#FF5722"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"

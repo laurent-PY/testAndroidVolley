@@ -2,6 +2,7 @@ package com.example.victor;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -26,8 +27,6 @@ import org.json.JSONObject;
 
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
-import java.util.Timer;
-import java.util.TimerTask;
 //ce block d'import me sert à falcifier le certificat SSL
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -106,28 +105,26 @@ public class PostVolley extends AppCompatActivity {
                 // je set le label text avec le msg de retour de la méthode
                 error_confirm_volley.setText(state_confirm);
 
-
-
-
                 // Todo terminer le contrôle de champs saisis
 
                 if(state_nom.equals("") && state_prenom.equals("") && state_mail.equals("") && state_password.equals("") && state_confirm.equals("")){
-                    nom_volley.setText("");
-                    prenom_volley.setText("");
-                    mail_volley.setText("");
-                    password_volley.setText("");
-                    confirm_volley.setText("");
-                    Toast.makeText(PostVolley.this, "Envoi des données OK !", Toast.LENGTH_SHORT).show();
+//                    nom_volley.setText("");
+//                    prenom_volley.setText("");
+//                    mail_volley.setText("");
+//                    password_volley.setText("");
+//                    confirm_volley.setText("");
+//                    Toast.makeText(PostVolley.this, "Envoi des données OK !", Toast.LENGTH_SHORT).show();
                     // j'appelle la méthode volley qui se charge de récupérer les données pour envoyer un json au backend
-                    progressb();
                     volleyPost(subs);
+
                 }
             }
             // méthode qui se charge de créer la string qui servira à la création du Json à envoyer au serveur backend PHP
             // elle a besoin en paramètre d'un objet, l'objet utilisateur(Users).
             public void volleyPost(Users subs) {
+
                 // postUrl qui reçois l'adresse du serveur et le nom du script à appeler.
-                String postUrl = "https://192.168.0.18/testing/write.php";
+                String postUrl = "https://192.168.0.19/testing/write.php";
                 RequestQueue requestQueue = Volley.newRequestQueue(PostVolley.this);
                 // créer les paires clé valeur à stocker dans l'objet json.
                 // attention, j'ai créé une paire "action : "register" qui servira au script PHP pour router la demande, par exemple register->insert,
@@ -147,7 +144,22 @@ public class PostVolley extends AppCompatActivity {
                 JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, postUrl, postData, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        //test pour afficher le retour
                         System.out.println(response);
+                        // try catch qui me permet de récuperer la réponse du back et de la stocker dans une variable que je vais passer sous condition
+                        try {
+                            boolean rep = response.getBoolean("success");
+                            // si "success" et égal à true, l'email n'existe pas en Base de données, j'ai déjà inscrit l'utilisateur dans la base, je le redirige vers login
+                            if(rep){
+                                Intent login = new Intent(PostVolley.this, Login.class);
+                                startActivity(login);
+                                // sinon le back m'as répondu que l'utilisateur veut utiliser un mail déjà existant, et donc un false sans insert et j'affiche un Toast.
+                            }else{
+                                Toast.makeText(PostVolley.this, "Adresse mail déjà utilisée.", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }, new Response.ErrorListener() {
                     @Override
@@ -158,26 +170,7 @@ public class PostVolley extends AppCompatActivity {
                 requestQueue.add(jsonObjectRequest);
                 // System.out.println("ici -------------------->"+ jsonObjectRequest);
             }
-            // TODO test progres bar à effacer
-            public void progressb(){
-                pb = (ProgressBar) findViewById(R.id.progressBar_volley);
-
-                final Timer t = new Timer();
-                TimerTask tt = new TimerTask() {
-                    @Override
-                    public void run() {
-                        counter++;
-                        pb.setProgress(counter);
-                        if(counter == 100){
-                            t.cancel();
-                        }
-                    }
-                };
-                t.schedule(tt, 0,5);
-            }
-            // TODO test progres bar à effacer
         });
-
     }
     //Methode à ne pas utiliser hors dev local "simule la présence d'un certificat de confiance 'cert' SSL"
     public static void handleSSLHandshake() {
